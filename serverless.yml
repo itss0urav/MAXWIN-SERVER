@@ -9,10 +9,32 @@ frameworkVersion: "3"
 provider:
   name: aws
   runtime: nodejs18.x
+  environment:
+    MONGODB_URI: ${env:MONGODB_URI}
+    JWT_SECRET: ${env:JWT_SECRET}
 
-# you can define service wide environment variables here
- environment:
-   variable1: value1
+functions:
+  getUsers:
+    handler: controller/UserController.getUsers
+    events:
+      - httpApi:
+          path: /user/getusers
+          method: post
+        
+  createUser:
+    handler: controller/UserController.createUser
+    events:
+      - httpApi:
+          path: /user/createusers
+          method: post
+
+  loginUser:
+    handler: controller/UserController.loginUser
+    events:
+      - httpApi:
+          path: /user/loginusers
+          method: post
+
 
 # you can overwrite defaults here
 #  stage: dev
@@ -36,7 +58,6 @@ provider:
 #                - "Ref" : "ServerlessDeploymentBucket"
 #                - "/*"
 
-
 # you can add packaging information here
 #package:
 #  patterns:
@@ -45,9 +66,6 @@ provider:
 #    - include-me.js
 #    - include-me-dir/**
 
-functions:
-  hello:
-    handler: handler.hello
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
